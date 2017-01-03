@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\modules\mainjob\models;
+namespace adzpire\job\models;
 
 use Yii;
-use backend\modules\mainjob\models\MainJob;
-use backend\modules\mainjob\models\Person;
+use adzpire\job\models\MainJob;
+use adzpire\job\models\Person;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use wowkaster\serializeAttributes\SerializeAttributesBehavior;

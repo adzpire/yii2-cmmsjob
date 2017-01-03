@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\mainjob\models;
+namespace adzpire\job\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;

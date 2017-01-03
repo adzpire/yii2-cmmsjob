@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\modules\mainjob\controllers;
+namespace adzpire\job\controllers;
 
 use Yii;
-use backend\modules\mainjob\models\MainJob;
-use backend\modules\mainjob\models\MainJobSearch;
+use adzpire\job\models\MainJob;
+use adzpire\job\models\MainJobSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

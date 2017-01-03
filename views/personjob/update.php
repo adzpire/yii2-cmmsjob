@@ -3,7 +3,7 @@
 use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
-/* @var $model backend\modules\mainjob\models\PersonJob */
+/* @var $model adzpire\job\models\PersonJob */
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person Jobs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];

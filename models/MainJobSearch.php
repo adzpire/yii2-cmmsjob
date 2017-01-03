@@ -1,14 +1,14 @@
 <?php
 
-namespace backend\modules\mainjob\models;
+namespace adzpire\job\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\mainjob\models\MainJob;
+use adzpire\job\models\MainJob;
 
 /**
- * MainJobSearch represents the model behind the search form about `backend\modules\mainjob\models\MainJob`.
+ * MainJobSearch represents the model behind the search form about `adzpire\job\models\MainJob`.
  */
 class MainJobSearch extends MainJob
 {

@@ -8,7 +8,7 @@ use kartik\widgets\Select2;
 use kartik\widgets\DatePicker;
 */
 /* @var $this yii\web\View */
-/* @var $model backend\modules\mainjob\models\PersonJob */
+/* @var $model adzpire\job\models\PersonJob */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

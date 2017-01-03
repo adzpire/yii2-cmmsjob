@@ -4,7 +4,7 @@ use yii\bootstrap\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model backend\modules\mainjob\models\MainJob */
+/* @var $model adzpire\job\models\MainJob */
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Main Jobs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

@@ -1,11 +1,11 @@
 <?php
 
-namespace backend\modules\mainjob\controllers;
+namespace adzpire\job\controllers;
 
-use backend\modules\mainjob\models\MainJob;
+use adzpire\job\models\MainJob;
 use Yii;
-use backend\modules\mainjob\models\PersonJob;
-use backend\modules\mainjob\models\PersonJobSearch;
+use adzpire\job\models\PersonJob;
+use adzpire\job\models\PersonJobSearch;
 use backend\modules\person\models\Person;
 
 use yii\web\Controller;

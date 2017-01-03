@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\mainjob;
+namespace adzpire\job;
 
 /**
  * mainjob module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'backend\modules\mainjob\controllers';
+    public $controllerNamespace = 'adzpire\job\controllers';
 
     /**
      * @inheritdoc
@@ -25,7 +25,7 @@ class Module extends \yii\base\Module
             Yii::$app->i18n->translations['repair'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
                 'sourceLanguage' => 'en',
-                'basePath' => 'backend\modules\mainjob/mainjob/messages'
+                'basePath' => 'adzpire/job/mainjob/messages'
             ];
         }
 		*/
