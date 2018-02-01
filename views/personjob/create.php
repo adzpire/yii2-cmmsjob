@@ -4,9 +4,9 @@ use yii\bootstrap\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model adzpire\job\models\PersonJob */
+/* @var $model backend\modules\mainjob\models\PersonJob */
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person Jobs'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'หน้ารายการ'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="person-job-create">

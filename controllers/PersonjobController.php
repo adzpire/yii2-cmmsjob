@@ -1,18 +1,21 @@
 <?php
 
-namespace adzpire\job\controllers;
+namespace backend\modules\mainjob\controllers;
 
-use adzpire\job\models\MainJob;
+use backend\modules\mainjob\models\MainJob;
 use Yii;
-use adzpire\job\models\PersonJob;
-use adzpire\job\models\PersonJobSearch;
+use backend\modules\mainjob\models\PersonJob;
+use backend\modules\mainjob\models\PersonJobSearch;
 use backend\modules\person\models\Person;
+
+use backend\components\AdzpireComponent;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
@@ -36,15 +39,26 @@ class PersonjobController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['create', 'update', 'delete'],
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['root'],
+                    ],
+                    // everything else is denied by default
+                ],
+            ],
         ];
     }
 
-	 public $checkperson;
     public $moduletitle;
-    public function beforeAction(){
+    public function beforeAction($action){
        //$this->checkperson = Person::findOne([Yii::$app->user->id]);
        $this->moduletitle = Yii::t('app', Yii::$app->controller->module->params['title']);
-       return true;
+        return parent::beforeAction($action);
     }
 	 
     /**
@@ -54,7 +68,7 @@ class PersonjobController extends Controller
     public function actionIndex()
     {
 		 
-		 Yii::$app->view->title = Yii::t('app', 'Person Jobs').' - '.$this->moduletitle;
+		 Yii::$app->view->title = Yii::t('app', 'รายการ').' - '.$this->moduletitle;
 		 
         $searchModel = new PersonJobSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -100,26 +114,16 @@ class PersonjobController extends Controller
 		
         if ($model->load(Yii::$app->request->post())) {
 			if($model->save()){
-				Yii::$app->getSession()->setFlash('addflsh', [
-				'type' => 'success',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-ok-circle',
-				'message' => Yii::t('app', 'เพิ่มรายการใหม่เรียบร้อย'),
-				]);
-			return $this->redirect(['view', 'id' => $model->id]);	
+                AdzpireComponent::succalert('addflsh', 'เพิ่มรายการเรียบร้อย');
+			    return $this->redirect(['view', 'id' => $model->id]);
 			}else{
-				Yii::$app->getSession()->setFlash('addflsh', [
-				'type' => 'danger',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-remove-circle',
-				'message' => Yii::t('app', 'เพิ่มรายการไม่ได้'),
-				]);
+                AdzpireComponent::dangalert('addflsh', 'เพิ่มรายการไม่ได้');
 			}
             print_r($model->getErrors());exit;
         }
 
         $jobs = MainJob::getMainJobList();
-        $personlist = Person::getPersonList(true,true,false,true);
+        $personlist = PersonJob::getAvialablelist();
             return $this->render('create', [
                 'model' => $model,
                 'jobs' => $jobs,
@@ -141,30 +145,24 @@ class PersonjobController extends Controller
 		 
 		 Yii::$app->view->title = Yii::t('app', 'ปรับปรุงรายการ {modelClass}: ', [
     'modelClass' => 'Person Job',
-]) . $model->id.' - '.Yii::t('app', Yii::$app->controller->module->params['title']);
+]) . $model->id.' - '.$this->moduletitle;
 		 
         if ($model->load(Yii::$app->request->post())) {
 			if($model->save()){
-				Yii::$app->getSession()->setFlash('edtflsh', [
-				'type' => 'success',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-ok-circle',
-				'message' => Yii::t('app', 'ปรับปรุงรายการเรียบร้อย'),
-				]);
-			return $this->redirect(['view', 'id' => $model->id]);	
+                AdzpireComponent::succalert('edtflsh', 'ปรับปรุงรายการเรียบร้อย');
+			    return $this->redirect(['view', 'id' => $model->id]);
 			}else{
-				Yii::$app->getSession()->setFlash('edtflsh', [
-				'type' => 'danger',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-remove-circle',
-				'message' => Yii::t('app', 'ปรับปรุงรายการไม่ได้'),
-				]);
+                AdzpireComponent::dangalert('edtflsh', 'ปรับปรุงรายการไม่ได้');
 			}
-            return $this->redirect(['view', 'id' => $model->id]);
-        } 
+            print_r($model->getErrors());exit();
+        }
 
+        $personlist = PersonJob::getAvialablelist($model->person_id);
+        $jobs = MainJob::getMainJobList();
             return $this->render('update', [
                 'model' => $model,
+                'personlist' => $personlist,
+                'jobs' => $jobs,
             ]);
         
 
@@ -179,14 +177,8 @@ class PersonjobController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-		
-		Yii::$app->getSession()->setFlash('edtflsh', [
-			'type' => 'success',
-			'duration' => 4000,
-			'icon' => 'glyphicon glyphicon-ok-circle',
-			'message' => Yii::t('app', 'ลบรายการเรียบร้อย'),
-		]);
-		
+
+        AdzpireComponent::succalert('edtflsh', 'ลบรายการเรียบร้อย');
 
         return $this->redirect(['index']);
     }
@@ -205,22 +197,5 @@ class PersonjobController extends Controller
         } else {
             throw new NotFoundHttpException('ไม่พบหน้าที่ต้องการ.');
         }
-    }
-
-    public function listjobinfo($id)
-    {
-        $model = $this->findModel($id);
-//        $job = MainJob::find()->all();
-        $courseli = '<ul>';
-
-        foreach ($model->job as $key) {
-            if (!empty($key)) {
-                $courseli .= '<li>' . MainJob::findOne($key)->stc_name . '</li>';
-//                $courseli .= '<li>' . $job[$key] . '</li>';
-            }
-        }
-        $courseli .= '</ul>';
-
-        return $courseli;
     }
 }

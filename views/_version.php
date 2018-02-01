@@ -35,44 +35,20 @@ Alert::begin([
         'data-target' => '#demo',
     ],
 ]);
-echo Html::a('ปิดการแจ้งเตือน 30 วัน', ['/tc/default/setvercookies'],
+echo Html::a('ปิดการแจ้งเตือน 30 วัน', ['default/setvercookies'],
     [
         'class' => 'btn btn-xs btn-danger',
     ]);
 ?>
-<!--<a id="blink" data-original-title="ปิดการแจ้งเตือน 30 วัน" data-toggle="tooltip" href="--><?php //echo Url::toRoute('/tc/default/setvercookies'); //echo Yii::$app()->baseUrl.'/cmmslib/default/setvercookies' ?><!--" class="alert-link text-danger glyphicon glyphicon-off"></a>-->
 <div id="demo" class="collapse">
-    <h4>version <?php echo Yii::$app->controller->module->params['ModuleVers']; ?></h4>
-    <ul>
-        <li>แก้ไขชื่อระบบ</li>
-    </ul>
+    <h4>เวอร์ชั่น <?php echo Yii::$app->controller->module->params['ModuleVers']; ?></h4>
+    <?php echo $this->render('/_changelog'); ?>
+    <?php
+    echo Html::a('แสดงการปรับปรุงทั้งหมด', ['default/changelog'],
+        [
+            'class' => 'btn btn-xs btn-warning',
+        ]);
+    ?>
 </div>
 
 <?php Alert::end(); ?>
-<!--<div class="alert alert-info alert-dismissible" role="alert">-->
-<!--    <div style="float:left;font-size:50px;margin-right:20px">-->
-<!--        --><?php //echo Html::icon('info-sign'); ?>
-<!--    </div>-->
-<!--    <div>-->
-<!--        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span-->
-<!--                aria-hidden="true">&times;</span></button>-->
-<!--        <h4><u>application-->
-<!--                version --><?php //echo Yii::$app->controller->module->params['ModuleVers'] . ' ' . Html::icon('chevron-left'); ?>
-<!--                1.0.0</u>-->
-<!--            <a data-original-title="ปิดการแจ้งเตือน 30 วัน" data-toggle="tooltip"-->
-<!--               href="--><?php //echo Url::toRoute('/itinfo/default/setvercookies'); ?><!--"-->
-<!--               class="alert-link text-danger glyphicon glyphicon-off">-->
-<!--            </a>-->
-<!--        </h4>-->
-<!--        <fieldset>-->
-<!--            <legend>current version --><?php //echo Yii::$app->controller->module->params['ModuleVers'] ?><!--</legend>-->
-<!--            <ul>-->
-<!--                <li>แก้ไขชื่อระบบ</li>-->
-<!--            </ul>-->
-<!--        </fieldset>-->
-<!--    </div>-->
-<!--</div>-->
-<script>
-    function blinker() { $('.alert-link').fadeOut(500).fadeIn(500); }
-    setInterval(blinker, 1000);
-</script>

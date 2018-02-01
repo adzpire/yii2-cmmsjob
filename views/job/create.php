@@ -4,9 +4,9 @@ use yii\bootstrap\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model adzpire\job\models\MainJob */
+/* @var $model backend\modules\mainjob\models\MainJob */
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Main Jobs'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'รายการ'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="main-job-create">
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel panel-primary">
 		<div class="panel-heading">
 			<span class="panel-title"><?= Html::icon('edit').' '.Html::encode($this->title) ?></span>
-			<?= Html::a( Html::icon('list-alt').' '.Yii::t('app', 'entry'), ['index'], ['class' => 'btn btn-success panbtn']) ?>
+			<?= Html::a( Html::icon('list-alt').' '.Yii::t('app', 'รายการ'), ['index'], ['class' => 'btn btn-success panbtn']) ?>
 		</div>
 		<div class="panel-body">
 		 <?= $this->render('_form', [

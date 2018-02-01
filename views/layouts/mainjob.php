@@ -159,13 +159,22 @@ $this->registerJs($js);
             background-color: #ffffff;
             border: 1px solid #a15426;
         }
+        .btn-link{
+            padding: 15px;
+        }
+        .nav-main-backend{
+		    display : none; 
+		}
+		.mywrap{
+		    margin-top: -50px;
+        }
      ");
     ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
-<?php $moduleID = \Yii::$app->controller->module->id;
-//print_r($module->id);
+<?php
+$modul = \Yii::$app->controller->module;
 ?>
 <?php
 $this->registerLinkTag([
@@ -175,14 +184,14 @@ $this->registerLinkTag([
     'href' => '/media/commsci.ico',
 ]);
 ?>
-<div class="wrap">
+<div class="wrap mywrap">
     <?php
     NavBar::begin([
         'brandLabel' => '<img class="cmmslogo" alt="Brand" src="/media/parallax/img/commsci_logo_black.png">' . '<table class="navtablelogo"><tbody>
 		  <tr><td>' . Yii::t('app', 'ระบบโครงสร้างงาน') . '</td></tr>
 		  <tr style="font-size: small;"><td>' . Yii::t('app', 'ระบบข้อมูลโครงสร้างงานภายใน คณะวิทยาการสื่อสาร') . '</td></tr>
 		  </tbody></table>',
-        'brandUrl' => Url::toRoute('/' . $moduleID),
+        'brandUrl' => Url::toRoute('/' . $modul->id),
         'innerContainerOptions' => ['class' => 'container-fluid'],
         'options' => [
             'class' => 'navbar-default',
@@ -197,8 +206,8 @@ $this->registerLinkTag([
                 ['label' => Html::Icon('plus') . ' ' . Yii::t('app', 'เพิ่มงาน'), 'url' => ['job/create']],
                 ['label' => Html::Icon('list') . ' ' . Yii::t('app', 'รายการงาน'), 'url' => ['job/']],
                 '<li class="divider"></li>',
-                ['label' => Html::Icon('plus') . ' ' . Yii::t('app', 'เพิ่มงาน/บุคลากร'), 'url' => ['personjob/create']],
-                ['label' => Html::Icon('list') . ' ' . Yii::t('app', 'รายการงาน/บุคลากร'), 'url' => ['personjob/']],
+                ['label' => Html::Icon('plus') . ' ' . Yii::t('app', 'จับคู่งานกับบุคลากร'), 'url' => ['personjob/create']],
+                ['label' => Html::Icon('list') . ' ' . Yii::t('app', 'รายการงานคู่บุคลากร'), 'url' => ['personjob/']],
             ]
         ],
 //        ['label' => Yii::t( 'app', 'lochistory'), 'url' => ['wru/create'], 'options' => ['class' => 'disabled']],
@@ -214,34 +223,28 @@ $this->registerLinkTag([
     ];
     if (Yii::$app->user->isGuest) {
         // $menuItems[] = ['label' => Yii::t( 'app', 'Signup'), 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => Html::Icon('log-in') . ' ' . Yii::t('app', 'Login'), 'url' => Yii::$app->user->loginUrl];
+        $menuItems1[] = ['label' => Html::Icon('log-in').' '.Yii::t( 'app', 'เข้าสู่ระบบ'), 'url' => Yii::$app->user->loginUrl];
     } else {
-        $menuItems[] = [
-            'label' => Html::Icon('log-out') . ' ' . Yii::t('app', 'ออกจากระบบ'),
-            'url' => ['#'],
-            'items' =>
-                [
-                    '<li>'
-                    . Html::a(Html::Icon('dashboard') . ' ' . Yii::t('app', 'office'), ['/'])
-                    . '</li>',
-                    '<li>'
-                    . Html::a(Html::Icon('globe') . ' ' . Yii::t('app', 'หน้าเว็บไซต์หลัก'), '/')
-                    . '</li>',
-                    '<li>'
-                    . Html::beginForm(['/site/logout', 'url' => Url::current()], 'post')
-                    . Html::submitButton(
-                        Html::Icon('log-out') . ' ' . Yii::t('app', 'ออกจากระบบ') . ' (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'btn btn-link']
-                    )
-                    . Html::endForm()
-                    . '</li>',
-                ],
-        ];
+        $menuItems1[] = ['label' => Html::Icon('dashboard').' '.Yii::t( 'app', 'office'), 'url' => ['/']];
+        $menuItems1[] = ['label' => Html::Icon('globe').' '.Yii::t( 'app', 'หน้าเว็บไซต์หลัก'), 'url' => '/'];
+        $menuItems1[] = '<li>'
+            . Html::beginForm(['/site/logout', 'url' => Url::current()], 'post')
+            . Html::submitButton(
+                Html::Icon('log-out') . ' ' . Yii::t('app', 'ออกจากระบบ') . ' (' . Yii::$app->user->identity->username . ')',
+                ['class' => 'btn btn-link']
+            )
+            . Html::endForm()
+            . '</li>';
     }
     echo Monav::widget([
         'options' => ['class' => 'navbar-nav navbar-left'],
         'encodeLabels' => false,
         'items' => $menuItems,
+    ]);
+    echo Monav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'encodeLabels' => false,
+        'items' => $menuItems1,
     ]);
     NavBar::end();
     ?>
@@ -249,10 +252,10 @@ $this->registerLinkTag([
         <?php
         $cookies = Yii::$app->request->cookies;
 
-        if (($cookie = $cookies->get('itmdlvers')) !== null) {
-            if ($cookie->value != Yii::$app->controller->module->params['ModuleVers']) {
+        if (($cookie = $cookies->get($modul->params['modulecookies'])) !== null) {
+            if ($cookie->value != $modul->params['ModuleVers']) {
                 $delcookies = Yii::$app->response->cookies;
-                $delcookies->remove('itmdlvers');
+                $delcookies->remove($modul->params['modulecookies']);
             }
         } else {
             echo $this->render('/_version');
@@ -263,7 +266,7 @@ $this->registerLinkTag([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             'homeLink' => [
                 'label' => Html::Icon('home'),
-                'url' => Url::toRoute('/' . $moduleID),
+                'url' => Url::toRoute('/' . $modul->id),
             ],
         ]) ?>
         <?= Alert::widget() ?>
@@ -302,7 +305,7 @@ $this->registerLinkTag([
 <footer class="footer">
     <div class="container-fluid">
         <p>© 2016 PSU YII DEV <span
-                class="label label-danger"><?php echo Yii::$app->controller->module->params['ModuleVers']; ?></span>
+                class="label label-danger"><?php echo $modul->params['ModuleVers']; ?></span>
             <?php echo '  ' . Yii::t('app', 'พบปัญหาในการใช้งาน ติดต่อ - ') . Html::icon('envelope'); ?>
             : <?php echo Html::mailto('อับดุลอาซิส ดือราแม', 'abdul-aziz.d@psu.ac.th'); ?><?php echo ' ' . Html::icon('earphone') . ' : ' . Yii::t('app', 'โทรศัพท์ภายใน : 2618'); ?>
             <a href="#" data-toggle="tooltip" title="<?php echo Yii::t('app', 'responsive_web'); ?>"><img

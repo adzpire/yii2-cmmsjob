@@ -1,6 +1,6 @@
 <?php
 
-namespace adzpire\job;
+namespace backend\modules\mainjob;
 
 /**
  * mainjob module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'adzpire\job\controllers';
+    public $controllerNamespace = 'backend\modules\mainjob\controllers';
 
     /**
      * @inheritdoc
@@ -25,15 +25,16 @@ class Module extends \yii\base\Module
             Yii::$app->i18n->translations['repair'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
                 'sourceLanguage' => 'en',
-                'basePath' => 'adzpire/job/mainjob/messages'
+                'basePath' => 'backend\modules\mainjob/mainjob/messages'
             ];
         }
 		*/
 		parent::init();
 
 		$this->layout = 'mainjob';
-		$this->params['ModuleVers'] = '1.0.0';
-		$this->params['title'] = 'mainjob';
+		$this->params['ModuleVers'] = '1.1';
+		$this->params['title'] = 'ข้อมูลโครงสร้างงาน';
+        $this->params['modulecookies'] = 'mainjobck';
         // custom initialization code goes here
     }
 }

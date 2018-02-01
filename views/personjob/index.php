@@ -6,7 +6,7 @@ use yii\bootstrap\Html;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel adzpire\job\models\PersonJobSearch */
+/* @var $searchModel backend\modules\mainjob\models\PersonJobSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->params['breadcrumbs'][] = $this->title;
@@ -45,6 +45,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			// 'updated_by',
 			[
 				'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => [
+                    'width' => '70px',
+                ],
 				/*'visibleButtons' => [
                     'view' => Yii::$app->user->id == 122,
                     'update' => Yii::$app->user->id == 19,
@@ -71,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		'panel'=>[
 			'type'=>GridView::TYPE_INFO,
-			'heading'=> Html::icon('user').' '.Html::encode($this->title),
+			'heading'=> Html::icon('briefcase').' '.Html::encode($this->title),
 		],
 	]); ?>
 	<?php 	 /* adzpire grid tips

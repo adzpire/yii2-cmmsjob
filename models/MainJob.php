@@ -1,9 +1,13 @@
 <?php
 
-namespace adzpire\job\models;
+namespace backend\modules\mainjob\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+
+use backend\modules\person\models\Person;
 /**
  * This is the model class for table "main_job".
  *
@@ -12,6 +16,10 @@ use yii\helpers\ArrayHelper;
  * @property string $stc_name
  * @property string $stc_name_eng
  * @property string $stc_detail
+ * @property string $created_at
+ * @property string $created_by
+ * @property string $updated_at
+ * @property string $updated_by
  */
 class MainJob extends \yii\db\ActiveRecord
 {
@@ -22,15 +30,26 @@ class MainJob extends \yii\db\ActiveRecord
     {
         return 'main_job';
     }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['stc_name', 'stc_name_eng', 'stc_detail'], 'required'],
+            [['stc_name'], 'required'],
             [['stc_detail'], 'string'],
             [['stc_name', 'stc_name_eng'], 'string', 'max' => 255],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['created_by' => 'user_id']],
+            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['updated_by' => 'user_id']],
         ];
     }
 
@@ -40,16 +59,28 @@ class MainJob extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'stc_id' => 'Stc ID',
-            'stc_name' => 'Stc Name',
-            'stc_name_eng' => 'Stc Name Eng',
-            'stc_detail' => 'Stc Detail',
+            'stc_id' => 'ID',
+            'stc_name' => 'ชื่องาน(ไทย)',
+            'stc_name_eng' => 'ชื่องาน(อังกฤษ)',
+            'stc_detail' => 'รายละเอียด',
+            'created_at' => 'สร้างเมื่อ',
+            'created_by' => 'สร้างโดย',
+            'updated_at' => 'อัพเดตเมื่อ',
+            'updated_by' => 'อัพเดตโดย',
         ];
     }
 
 public static function getMainJobList(){
 		return ArrayHelper::map(self::find()->all(), 'stc_id', 'stc_name');
 	}
+    public function getCreatedBy()
+    {
+        return $this->hasOne(Person::className(), ['user_id' => 'created_by']);
+    }
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(Person::className(), ['user_id' => 'updated_by']);
+    }
 
 /*
 public static function itemsAlias($key) {

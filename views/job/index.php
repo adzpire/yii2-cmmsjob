@@ -6,10 +6,15 @@ use yii\bootstrap\Html;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel adzpire\job\models\MainJobSearch */
+/* @var $searchModel backend\modules\mainjob\models\MainJobSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerCss('
+.grid-view td {
+    white-space: unset;
+}
+');
 ?>
 <div class="main-job-index">
 
@@ -22,12 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
-            'stc_id',
+            [
+                'attribute' => 'stc_id',
+                'headerOptions' => [
+                    'width' => '50px',
+                ],
+            ],
             'stc_name',
             'stc_name_eng',
             'stc_detail:ntext',
 				[
 					'class' => 'yii\grid\ActionColumn',
+                    'headerOptions' => [
+                        'width' => '70px',
+                    ],
 					/*'visibleButtons' => [
 						'view' => Yii::$app->user->id == 122,
 						'update' => Yii::$app->user->id == 19,
@@ -46,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'hover'=>true,
 		'toolbar'=> [
 			['content'=>
-				Html::a(Html::icon('plus'), ['create'], ['class'=>'btn btn-success', 'title'=>Yii::t('app', 'เพิ่ม')]).' '.
+				Html::a(Html::icon('plus').' เพิ่มรายการ', ['create'], ['class'=>'btn btn-success', 'title'=>Yii::t('app', 'เพิ่ม')]).' '.
 				Html::a(Html::icon('repeat'), ['grid-demo'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
 			],
 			//'{export}',
@@ -54,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		'panel'=>[
 			'type'=>GridView::TYPE_INFO,
-			'heading'=> Html::icon('user').' '.Html::encode($this->title),
+			'heading'=> Html::icon('briefcase').' '.Html::encode($this->title),
 		],
     ]); ?>
 <?php 	 /* adzpire grid tips

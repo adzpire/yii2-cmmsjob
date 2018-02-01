@@ -1,15 +1,19 @@
 <?php
 
-namespace adzpire\job\controllers;
+namespace backend\modules\mainjob\controllers;
 
 use Yii;
-use adzpire\job\models\MainJob;
-use adzpire\job\models\MainJobSearch;
+use backend\modules\mainjob\models\MainJob;
+use backend\modules\mainjob\models\MainJobSearch;
+
+use backend\components\AdzpireComponent;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
@@ -33,15 +37,26 @@ class JobController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['create', 'update', 'delete'],
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['root'],
+                    ],
+                    // everything else is denied by default
+                ],
+            ],
         ];
     }
 
-	 public $checkperson;
     public $moduletitle;
-    public function beforeAction(){
+    public function beforeAction($action){
        //$this->checkperson = Person::findOne([Yii::$app->user->id]);
        $this->moduletitle = Yii::t('app', Yii::$app->controller->module->params['title']);
-       return true;
+        return parent::beforeAction($action);
     }
 	 
     /**
@@ -51,7 +66,7 @@ class JobController extends Controller
     public function actionIndex()
     {
 		 
-		 Yii::$app->view->title = Yii::t('app', 'Main Jobs').' - '.Yii::t('app', Yii::$app->controller->module->params['title']);
+		 Yii::$app->view->title = Yii::t('app', 'รายการ ').' - '.$this->moduletitle;
 		 
         $searchModel = new MainJobSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -71,7 +86,7 @@ class JobController extends Controller
     {
 		 $model = $this->findModel($id);
 		 
-		 Yii::$app->view->title = Yii::t('app', 'ดูรายละเอียด').' : '.$model->stc_id.' - '.Yii::t('app', Yii::$app->controller->module->params['title']);
+		 Yii::$app->view->title = Yii::t('app', 'ดูรายละเอียด').' : '.$model->stc_id.' - '.$this->moduletitle;
 		 
         return $this->render('view', [
             'model' => $model,
@@ -85,7 +100,7 @@ class JobController extends Controller
      */
     public function actionCreate()
     {
-		 Yii::$app->view->title = Yii::t('app', 'สร้างใหม่').' - '.Yii::t('app', Yii::$app->controller->module->params['title']);
+		 Yii::$app->view->title = Yii::t('app', 'สร้างใหม่').' - '.Yii::t('app', $this->moduletitle);
 		 
         $model = new MainJob();
 
@@ -97,20 +112,10 @@ class JobController extends Controller
 		
         if ($model->load(Yii::$app->request->post())) {
 			if($model->save()){
-				Yii::$app->getSession()->setFlash('addflsh', [
-				'type' => 'success',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-ok-circle',
-				'message' => Yii::t('app', 'เพิ่มรายการใหม่เรียบร้อย'),
-				]);
-			return $this->redirect(['view', 'id' => $model->stc_id]);	
+                AdzpireComponent::succalert('addflsh', 'เพิ่มรายการใหม่เรียบร้อย');
+			    return $this->redirect(['view', 'id' => $model->stc_id]);
 			}else{
-				Yii::$app->getSession()->setFlash('addflsh', [
-				'type' => 'danger',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-remove-circle',
-				'message' => Yii::t('app', 'เพิ่มรายการไม่ได้'),
-				]);
+                AdzpireComponent::dangalert('addflsh', 'เพิ่มรายการไม่ได้');
 			}
             print_r($model->getErrors());exit;
         }
@@ -134,26 +139,16 @@ class JobController extends Controller
 		 
 		 Yii::$app->view->title = Yii::t('app', 'ปรับปรุงรายการ {modelClass}: ', [
     'modelClass' => 'Main Job',
-]) . $model->stc_id.' - '.Yii::t('app', Yii::$app->controller->module->params['title']);
+]) . $model->stc_id.' - '.$this->moduletitle;
 		 
         if ($model->load(Yii::$app->request->post())) {
 			if($model->save()){
-				Yii::$app->getSession()->setFlash('edtflsh', [
-				'type' => 'success',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-ok-circle',
-				'message' => Yii::t('app', 'ปรับปรุงรายการเรียบร้อย'),
-				]);
-			return $this->redirect(['view', 'id' => $model->stc_id]);	
+                AdzpireComponent::succalert('edtflsh', 'ปรับปรุงรายการเรียบร้อย');
+			    return $this->redirect(['view', 'id' => $model->stc_id]);
 			}else{
-				Yii::$app->getSession()->setFlash('edtflsh', [
-				'type' => 'danger',
-				'duration' => 4000,
-				'icon' => 'glyphicon glyphicon-remove-circle',
-				'message' => Yii::t('app', 'ปรับปรุงรายการไม่ได้'),
-				]);
+                AdzpireComponent::dangalert('edtflsh', 'ปรับปรุงรายการไม่ได้');
 			}
-            return $this->redirect(['view', 'id' => $model->stc_id]);
+            print_r($model->getErrors());exit;
         } 
 
             return $this->render('update', [
@@ -172,14 +167,8 @@ class JobController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-		
-		Yii::$app->getSession()->setFlash('edtflsh', [
-			'type' => 'success',
-			'duration' => 4000,
-			'icon' => 'glyphicon glyphicon-ok-circle',
-			'message' => Yii::t('app', 'ลบรายการเรียบร้อย'),
-		]);
-		
+
+        AdzpireComponent::succalert('edtflsh', 'ลบรายการเรียบร้อย');
 
         return $this->redirect(['index']);
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace adzpire\job\models;
+namespace backend\modules\mainjob\models;
 
 use Yii;
-use adzpire\job\models\MainJob;
-use adzpire\job\models\Person;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use wowkaster\serializeAttributes\SerializeAttributesBehavior;
+use yii\helpers\ArrayHelper;
+use backend\modules\person\models\Person;
 /**
  * This is the model class for table "person_job".
  *
@@ -56,7 +56,7 @@ class PersonJob extends \yii\db\ActiveRecord
             [['person_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['job'], 'safe'],
             ['job', 'each', 'rule' => ['integer']],
-            [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'user_id']],
+            [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => PersonExt::className(), 'targetAttribute' => ['person_id' => 'user_id']],
         ];
     }
 
@@ -81,7 +81,7 @@ class PersonJob extends \yii\db\ActiveRecord
      */
     public function getPerson()
     {
-        return $this->hasOne(Person::className(), ['user_id' => 'person_id']);
+        return $this->hasOne(PersonExt::className(), ['user_id' => 'person_id']);
 
         /*
         $dataProvider->sort->attributes['personName'] = [
@@ -123,6 +123,20 @@ class PersonJob extends \yii\db\ActiveRecord
         $courseli .= '</ul>';
 
         return $courseli;
+    }
+
+    public static function getAvialablelist($id = NULL){
+        $tmp1 = Person::getPersonList();
+        if(!empty($id)){
+            //$tmp2 = ArrayHelper::map(self::find()->where(['year' => $params])->andWhere(['not', 'user_id='.$id])->all(), 'user_id', 'user_id');
+            $tmp2 = ArrayHelper::map(self::find()->select('person_id')->distinct()->all(), 'person_id', 'person_id');
+            unset($tmp2[$id]);
+        }else{
+            $tmp2 = ArrayHelper::map(self::find()->select('person_id')->distinct()->all(), 'person_id', 'person_id');
+        }
+        $result=array_diff_key($tmp1,$tmp2);
+//        print_r($result);exit();
+        return $result;
     }
 
     /*

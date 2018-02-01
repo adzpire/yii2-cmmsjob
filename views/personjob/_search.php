@@ -4,7 +4,7 @@ use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model adzpire\job\models\PersonJobSearch */
+/* @var $model backend\modules\mainjob\models\PersonJobSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
